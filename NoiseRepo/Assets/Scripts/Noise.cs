@@ -121,6 +121,31 @@ public static class Noise {
                 }
             }
         }
+
+        // Normalize derivates
+        float[,] normalizedDMap = new float[mapWidth, mapHeight];
+        for(int x = 0; x < mapWidth; x++)
+        {
+            for(int y = 0; y < mapHeight; y++)
+            {
+                normalizedDMap[x, y] = Mathf.InverseLerp(minDeriv, maxDeriv, derivateMap[x, y]);
+            }
+        }
+        derivateMap = normalizedDMap;
+
+        return derivateMap;
+    }
+}
+
+
+
+
+        // Debug.Log("minDeriv: " + Mathf.InverseLerp(minDeriv, maxDeriv, minDeriv));
+        // Debug.Log("maxDeriv: " + Mathf.InverseLerp(minDeriv, maxDeriv, maxDeriv));
+        // Debug.Log("0.0147106: " + Mathf.InverseLerp(minDeriv, maxDeriv, 0.0147106f));
+        // Debug.Log("0: " + Mathf.InverseLerp(minDeriv, maxDeriv, 0f));
+        // Debug.Log("-0.3: " + Mathf.InverseLerp(minDeriv, maxDeriv, -0.3f));
+        // Debug.Log("0.3: " + Mathf.InverseLerp(minDeriv, maxDeriv, 0.3f));
         // int x_0 = minDerivPos[0];
         // int y_0 = minDerivPos[1];
         // int x_plus1 = minDerivPos[0] + 1;
@@ -153,6 +178,3 @@ public static class Noise {
         // Debug.Log("(" + x_plus1 + "; " + y_0 + "): " + noiseMap[x_plus1, y_0]);
         // Debug.Log("(" + x_0 + "; " + y_minus1 + "): " + noiseMap[x_0, y_minus1]);
         // Debug.Log("(" + x_0 + "; " + y_plus1 + "): " + noiseMap[x_0, y_plus1]);
-        return derivateMap;
-    }
-}

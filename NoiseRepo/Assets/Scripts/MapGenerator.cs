@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
+    public enum DrawMode {NoiseMap, ColorMap, DerivateMap};
+    public DrawMode drawMode;
     public int mapWidth;
     public int mapHeight;
     public float noiseScale;
@@ -16,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     public Vector2 offset;
 
     public bool autoUpdate;
+    public TerrainType[] regions;
 
     public void GenerateMap()
     {
@@ -23,9 +26,55 @@ public class MapGenerator : MonoBehaviour
 
         float[,] derivateMap = Noise.GenerateDerivateMap(noiseMap);
 
+        Color[] colorMap = new Color[mapWidth * mapHeight];
+        for(int y = 0; y < mapHeight; y++)
+        {
+            for(int x = 0; x < mapWidth; x++)
+            {
+                float currentHeight = noiseMap[x, y];
+                for(int i = 0; i < regions.Length; i++)
+                {
+                    if(currentHeight <= regions[i].height)
+                    {
+                        colorMap[y * mapWidth + x] = regions[i].color;
+                        break;
+                    }
+                }
+            }
+        }
+
+        Color[] colorMapDerivate = new Color[mapWidth * mapHeight];
+        for(int y = 0; y < mapHeight; y++)
+        {
+            for(int x = 0; x < mapWidth; x++)
+            {
+                float currentHeight = derivateMap[x, y];
+                for(int i = 0; i < regions.Length; i++)
+                {
+                    if(currentHeight <= regions[i].height)
+                    {
+                        colorMapDerivate[y * mapWidth + x] = regions[i].color;
+                        break;
+                    }
+                }
+            }
+        }
+
         MapDisplay display = FindObjectOfType<MapDisplay>();
-        display.DrawNoiseMap(derivateMap, false);
-        display.DrawNoiseMap(noiseMap);
+
+        if(drawMode == DrawMode.NoiseMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
+        }
+        else if(drawMode == DrawMode.ColorMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMap, mapWidth, mapHeight));
+        }
+        else if(drawMode == DrawMode.DerivateMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMapDerivate, mapWidth, mapHeight));
+        }
+        // display.DrawNoiseMap(derivateMap, false);
     }
 
     void OnValidate() 
@@ -51,4 +100,14 @@ public class MapGenerator : MonoBehaviour
             noiseScale = 0.001f;
         }
     }
+}
+
+[System.Serializable]
+public struct TerrainType
+{
+    public string name;
+    public float height;
+    public Color color;
+
+
 }
