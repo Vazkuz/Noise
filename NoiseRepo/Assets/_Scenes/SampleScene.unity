@@ -355,10 +355,10 @@ MonoBehaviour:
   autoUpdate: 1
   regions:
   - name: Water Deep
-    height: 0.3
+    height: 0.25
     color: {r: 0.23255605, g: 0.40032044, b: 0.735849, a: 0}
   - name: Water Shallow
-    height: 0.4
+    height: 0.45
     color: {r: 0.26855645, g: 0.44633332, b: 0.8018868, a: 0}
   - name: Sand
     height: 0.5
