@@ -1,54 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
-public class MapGenerator : MonoBehaviour
-{
-    public int mapWidth;
-    public int mapHeight;
-    public float noiseScale;
+public class MapGenerator : MonoBehaviour {
 
-    public int octaves;
-    [Range(0,1)] public float persistance;
-    public float lacunarity;
+	public int mapWidth;
+	public int mapHeight;
+	public float noiseScale;
 
-    public int seed;
-    public Vector2 offset;
+	public int octaves;
+	[Range(0,1)]
+	public float persistance;
+	public float lacunarity;
 
-    public bool autoUpdate;
+	public int seed;
+	public Vector2 offset;
 
-    public void GenerateMap()
-    {
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+	public bool autoUpdate;
 
-        float[,] derivateMap = Noise.GenerateDerivateMap(noiseMap);
+	public void GenerateMap() {
+		float[,] noiseMap = Noise.GenerateNoiseMap (mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
 
-        MapDisplay display = FindObjectOfType<MapDisplay>();
-        display.DrawNoiseMap(derivateMap, false);
-        display.DrawNoiseMap(noiseMap);
-    }
 
-    void OnValidate() 
-    {
-        if(mapWidth < 1)    
-        {
-            mapWidth = 1;
-        }
-        if(mapHeight < 1)
-        {
-            mapHeight = 1;
-        }
-        if(lacunarity < 1)
-        {
-            lacunarity = 1;
-        }
-        if(octaves < 1)
-        {
-            octaves = 1;
-        }
-        if(noiseScale < 0.001f)
-        {
-            noiseScale = 0.001f;
-        }
-    }
+		MapDisplay display = FindObjectOfType<MapDisplay> ();
+		display.DrawNoiseMap (noiseMap);
+	}
+
+	void OnValidate() {
+		if (mapWidth < 1) {
+			mapWidth = 1;
+		}
+		if (mapHeight < 1) {
+			mapHeight = 1;
+		}
+		if (lacunarity < 1) {
+			lacunarity = 1;
+		}
+		if (octaves < 0) {
+			octaves = 0;
+		}
+	}
+
 }
